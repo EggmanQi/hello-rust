@@ -1,17 +1,25 @@
-// mod primitives;
-
 use ferris_says::{self, say};
 use std::io::{BufWriter, stdout};
+
+// 引用其他文件的方式
+mod structures;
+use crate::structures::{Point, Rectangle, Unit, Pair};
+
 fn main() {
+    the_first_case();
+
+    // function_reference();
+    // learn_promitives();
+
+    learn_structures();
+}
+
+fn the_first_case() {
     let stdout = stdout();
     let message = String::from("Hello fellow Rustaceans!");
     let width = message.chars().count();
     let mut writer = BufWriter::new(stdout.lock());
     say(&message, width, &mut writer).unwrap();
-
-    function_reference();
-
-    promitives()
 }
 
 fn function_reference() {
@@ -27,7 +35,7 @@ fn function_reference() {
 }
 
 // Promitives 基本数据结构
-fn promitives() {
+fn learn_promitives() {
     // 
     let logical: bool = true;
     println!("{}", logical);
@@ -44,11 +52,13 @@ fn promitives() {
     println!("{}，{}", default_float, default_integer);
 
     let mut inferred_type = 12; // 默认推断为 i32
+    println!("{}", inferred_type);
     // inferred_type = 4294967296; // 不使用尾标注 i64 会报错
     inferred_type = 429467296i64;
     println!("{}", inferred_type);
 
     let mut mutable = 12;
+    println!("{}", mutable);
     mutable = 21;
     println!("{}", mutable);
 
@@ -56,4 +66,34 @@ fn promitives() {
     let mutable = true; // 变量可以通过重复声明（重写）来更新类型和值
 
     println!("{}", mutable);
+}
+
+fn learn_structures() {
+    let name = String::from("Peter");
+    let age = 23;
+
+    let peter = structures::Person {
+        name, age
+    };
+    println!("{:?}",peter);
+
+    let point: Point = Point { x: 10.3, y: 0.4};
+    println!("point coordinates: ({}, {})", point.x, point.y);
+
+    let bottom_right = Point { x: 5.2, ..point };
+    println!("second point: ({}, {})", bottom_right.x, bottom_right.y);
+
+    let Point { x: left_edge, y: top_edge } = point;
+    let _rectangle = Rectangle {
+        top_left: Point { x: left_edge, y: top_edge },
+        bottom_right: bottom_right,
+    };
+    println!("the rectangle is: {:?}", _rectangle);
+
+    let _unit = Unit;
+    let pair = Pair(1, 0.1);
+    println!("pair contains {:?} and {:?}", pair.0, pair.1);
+
+    let Pair(integer, decimal) = pair;
+    println!("pair contains {:?} and {:?}", integer, decimal);
 }
